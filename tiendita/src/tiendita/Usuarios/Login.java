@@ -1,0 +1,394 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package tiendita.Usuarios;
+
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import tiendita.Beans.Bean;
+import tiendita.Conexiones.conexion;
+import tiendita.Conexiones.newconexion;
+import tiendita.PanelVentas;
+import tiendita.Tiendita;
+
+/**
+ *
+ * @author Mikaela Estefania Ramirez Herrera <Estefania_mikaela@hotmail.com>
+ */
+public class Login extends javax.swing.JFrame {
+
+    /**
+     * Creates new form Login
+     */
+    public Login() {
+        initComponents();
+        setTitle("Iniciar Sesion");
+        this.setExtendedState( JFrame.MAXIMIZED_BOTH );//maximizado
+        this.toFront();
+        this.getContentPane().setBackground(Color.white);
+    }
+    Bean bean = new Bean();
+    UserNameBeans unb = new UserNameBeans();
+    static Connection con;
+    String sql="CREATE TABLE `inventario` (" +
+"  `Id` int(11) NOT NULL," +
+"  `Producto` varchar(20) COLLATE utf8_spanish_ci NOT NULL," +
+"  `UID1` int(11) DEFAULT NULL," +
+"  `Um1` varchar(11) COLLATE utf8_spanish_ci DEFAULT NULL," +
+"  `P1` float DEFAULT NULL," +
+"  `C1` float DEFAULT NULL" +
+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci";
+    String sql2="CREATE TABLE `medidas` (\n" +
+"  `Id` int(11) NOT NULL,\n" +
+"  `Um` varchar(20) COLLATE utf8_spanish_ci NOT NULL\n" +
+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;";
+    String sql3="CREATE TABLE `registros` (\n" +
+"  `Id` int(11) NOT NULL,\n" +
+"  `IdUsuario` int(11) NOT NULL,\n" +
+"  `FechaDeAcceso` varchar(10) COLLATE utf8_spanish_ci NOT NULL,\n" +
+"  `HoraDeAcceso` varchar(10) COLLATE utf8_spanish_ci NOT NULL,\n" +
+"  `CajaInicial` float DEFAULT NULL,\n" +
+"  `FechaDeCierre` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,\n" +
+"  `HoraDeCierre` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,\n" +
+"  `CajaFinal` float DEFAULT NULL,\n" +
+"  `Semana` int(11) DEFAULT NULL,\n" +
+"  `Acceso` varchar(13) COLLATE utf8_spanish_ci NOT NULL\n" +
+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;";
+    String sql4="CREATE TABLE `reporte_info` (\n" +
+"  `Id` int(11) NOT NULL,\n" +
+"  `Id_vendedor` int(11) NOT NULL,\n" +
+"  `Total_Venta` double DEFAULT NULL,\n" +
+"  `Fecha` varchar(10) COLLATE utf8_spanish_ci NOT NULL,\n" +
+"  `Hora` varchar(5) COLLATE utf8_spanish_ci NOT NULL,\n" +
+"  `Dia` int(11) NOT NULL,\n" +
+"  `Semana` int(11) NOT NULL,\n" +
+"  `Mes` int(11) NOT NULL,\n" +
+"  `Año` int(11) NOT NULL\n" +
+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;";
+    String sql5="CREATE TABLE `reporte_venta` (\n" +
+"  `Id` int(11) NOT NULL,\n" +
+"  `Id_Info` int(11) NOT NULL,\n" +
+"  `Id_Producto` int(11) NOT NULL,\n" +
+"  `Producto` varchar(20) COLLATE utf8_spanish_ci NOT NULL,\n" +
+"  `Presentacion` varchar(10) COLLATE utf8_spanish_ci NOT NULL,\n" +
+"  `TotalProducto` double NOT NULL,\n" +
+"  `Cantidad` double NOT NULL\n" +
+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;";
+    String sql6="CREATE TABLE `usuarios` (\n" +
+"  `IdUsuario` int(11) NOT NULL,\n" +
+"  `Nombre` varchar(50) COLLATE utf8_spanish_ci NOT NULL,\n" +
+"  `Usuario` varchar(20) COLLATE utf8_spanish_ci NOT NULL,\n" +
+"  `Contraseña` varchar(10) COLLATE utf8_spanish_ci NOT NULL,\n" +
+"  `Rango` int(11) NOT NULL,\n" +
+"  `Sesion` int(11) NOT NULL\n" +
+") ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;";
+    String sql7="INSERT INTO `usuarios` (`IdUsuario`, `Nombre`, `Usuario`, `Contraseña`, `Rango`, `Sesion`) VALUES\n" +
+"(1, 'Administrador', 'user', 'password', 1, 0);";
+    String sql8="ALTER TABLE `inventario`\n" +
+"  ADD PRIMARY KEY (`Id`);";
+    String sql9="ALTER TABLE `medidas`\n" +
+"  ADD PRIMARY KEY (`Id`);";
+    String sql10="ALTER TABLE `registros`\n" +
+"  ADD PRIMARY KEY (`Id`),\n" +
+"  ADD KEY `Id_Usuario` (`IdUsuario`);";
+    String sql11="ALTER TABLE `reporte_info`\n" +
+"  ADD PRIMARY KEY (`Id`),\n" +
+"  ADD KEY `Id_vendedor` (`Id_vendedor`);";
+    String sql12="ALTER TABLE `reporte_venta`\n" +
+"  ADD PRIMARY KEY (`Id`),\n" +
+"  ADD KEY `Id_Info` (`Id_Info`),\n" +
+"  ADD KEY `Id_Producto` (`Id_Producto`);";
+    String sql13="ALTER TABLE `usuarios`\n" +
+"  ADD PRIMARY KEY (`IdUsuario`);";
+    String sql14="ALTER TABLE `inventario`\n" +
+"  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;";
+    String sql15="ALTER TABLE `medidas`\n" +
+"  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=0;";
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        usuariocomp = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        Login = new javax.swing.JButton();
+        contraseña = new javax.swing.JPasswordField();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
+        setResizable(false);
+        getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel1.setText("Iniciar Sesion");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel2.setText("Usuario");
+
+        usuariocomp.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel3.setText("Contraseña");
+
+        Login.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        Login.setText("Acceder");
+        Login.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LoginActionPerformed(evt);
+            }
+        });
+
+        contraseña.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(159, 159, 159)
+                        .addComponent(Login, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(131, 131, 131)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel2)
+                                .addComponent(usuariocomp)
+                                .addComponent(jLabel3)
+                                .addComponent(contraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(105, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(76, 76, 76)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(usuariocomp, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(contraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(Login, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(106, Short.MAX_VALUE))
+        );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 95;
+        gridBagConstraints.ipady = 95;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        getContentPane().add(jPanel1, gridBagConstraints);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginActionPerformed
+       int existe=dbExists("3306","pvdb","");
+        if(existe==1){
+            buscarcargar();
+       }else if(existe==0){
+        int opcion =JOptionPane.showConfirmDialog(null, "Desea crear una nueva", "Nueva Base de datos", JOptionPane.YES_NO_OPTION);
+            if (opcion==JOptionPane.YES_OPTION) {
+                    NuevaBD();
+            }
+        }
+        
+    }//GEN-LAST:event_LoginActionPerformed
+
+    public int dbExists(String puerto, String db, String pass) {
+        int exist = 0;
+        try {
+            Connection conn = null;
+            Statement st = null;
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:" + puerto + "/" + db, "root", pass);
+            st = conn.createStatement();
+            String sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '" + db + "'";
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+//                JOptionPane.showMessageDialog(null, "La base de datos existe.");
+                exist = 1;
+            }
+        } catch (ClassNotFoundException ex) {
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "La base de datos no existe.");
+            exist = 0;
+        }
+        return exist;
+    }
+    
+    public void buscarcargar() {
+        try {
+            char[] arrayC = contraseña.getPassword();
+            String Contraseña1 = new String(arrayC);
+            String Usuario1 =usuariocomp.getText();
+            String sql = "SELECT * FROM `usuarios` where Usuario= '" + Usuario1 + "' AND Contraseña='" + Contraseña1 + "'";
+            con = conexion.getConnection();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                int id = rs.getInt("IdUsuario");
+                String Nombre = rs.getString("Nombre");
+                int Rango = rs.getInt("Rango");
+                int Sesion=rs.getInt("Sesion");
+                if (Sesion==0){
+                    if (Rango == 1) {
+                        unb.setIduser(id);
+                        unb.setNombre(Nombre);
+                        UpdateSesion();
+                        new Tiendita().setVisible(true);
+                        this.setVisible(false);
+                    } else {
+                        unb.setIduser(id);
+                        unb.setNombre(Nombre);
+                        UpdateSesion();
+                        new PanelVentas().setVisible(true);
+                        this.setVisible(false);
+                    }}else {
+                    JOptionPane.showMessageDialog(null, "Error, ya existe una sesion para este usuario iniciada");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Error en Usuario o Contraseña");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+    
+        public void UpdateSesion() {
+        try {
+            con = conexion.getConnection();
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            PreparedStatement ps = con.prepareStatement("UPDATE `usuarios` SET `Sesion`=1 WHERE IdUsuario='"+unb.getIduser()+"'");
+            int res = ps.executeUpdate();
+            con.close(); //siempre cerrar las conexiones despues de usarlas
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex); // imprime el error si hay
+        }
+    }
+        
+       private void NuevaBD(){
+           try {
+            con = newconexion.getConnection();
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Statement stmt = con.createStatement();
+            stmt.execute("CREATE DATABASE IF NOT EXISTS pvdb CHARACTER SET utf8 COLLATE utf8_general_ci;");
+            NuevaTab();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex); // imprime el error si hay
+        }
+       }
+       
+              private void NuevaTab(){
+           try {
+            con = conexion.getConnection();
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            PreparedStatement ps = con.prepareStatement(sql);
+            int res=ps.executeUpdate();
+            PreparedStatement ps2 = con.prepareStatement(sql2);
+            int re2s=ps2.executeUpdate();
+            PreparedStatement ps3 = con.prepareStatement(sql3);
+            int res3=ps3.executeUpdate();
+            PreparedStatement ps4 = con.prepareStatement(sql4);
+            int res4=ps4.executeUpdate();
+            PreparedStatement ps5 = con.prepareStatement(sql5);
+            int res5=ps5.executeUpdate();
+            PreparedStatement ps6 = con.prepareStatement(sql6);
+            int res6=ps6.executeUpdate();
+            PreparedStatement ps7 = con.prepareStatement(sql7);
+            int res7=ps7.executeUpdate();
+            PreparedStatement ps8 = con.prepareStatement(sql8);
+            int res8=ps8.executeUpdate();
+            PreparedStatement ps9 = con.prepareStatement(sql9);
+            int res9=ps9.executeUpdate();
+            PreparedStatement ps10 = con.prepareStatement(sql10);
+            int res10=ps10.executeUpdate();
+            PreparedStatement ps11 = con.prepareStatement(sql11);
+            int res11=ps11.executeUpdate();
+            PreparedStatement ps12 = con.prepareStatement(sql12);
+            int res12=ps12.executeUpdate();
+            PreparedStatement ps13 = con.prepareStatement(sql13);
+            int res13=ps13.executeUpdate();
+            PreparedStatement ps14 = con.prepareStatement(sql14);
+            int res14=ps14.executeUpdate();
+            PreparedStatement ps15 = con.prepareStatement(sql15);
+            int res15=ps15.executeUpdate();
+            con.close(); //siempre cerrar las conexiones despues de usarlas
+            JOptionPane.showMessageDialog(null, "Se creo la base de datos correctamente");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex); // imprime el error si hay
+        }
+       }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Login().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Login;
+    private javax.swing.JPasswordField contraseña;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField usuariocomp;
+    // End of variables declaration//GEN-END:variables
+}
