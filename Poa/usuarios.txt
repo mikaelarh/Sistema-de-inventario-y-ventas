@@ -1,0 +1,14 @@
+INSERT INTO `usuarios` VALUES ('1','mikaela','123','Mikaela E Ramirez Herrera');
+INSERT INTO `usuarios` VALUES ('2','carlos_chan','4SJ9N6uu','Carlos Chan');
+INSERT INTO `usuarios` VALUES ('3','roberto_miss','Jtffc8YM','Roberto Miss');
+INSERT INTO `usuarios` VALUES ('4','andres_sarate','mUS9VguL','Andres Zarate');
+INSERT INTO `usuarios` VALUES ('5','jorge_garcia','L9wB24SH','Jorge Garcia');
+INSERT INTO `usuarios` VALUES ('6','Marcela Flores','y6eDNN4C','Sonia Marcela Flores');
+INSERT INTO `usuarios` VALUES ('7','vhf','DK6jCTjk','victor hugo fernandez carrillo');
+INSERT INTO `usuarios` VALUES ('8','luis_sanchez','58GNpAeb','Luis Sanchez');
+INSERT INTO `usuarios` VALUES ('9','angel_ballina','Msh92CN6','Angel Ballina');
+INSERT INTO `usuarios` VALUES ('10','esteban_ballina','uszAPn4X','Esteban Ballina');
+INSERT INTO `usuarios` VALUES ('11','gregorio_m','4HApupGv','Gregorio Martinez');
+INSERT INTO `usuarios` VALUES ('12','luis_alb','BA69xbRg','Luis Albarran');
+INSERT INTO `usuarios` VALUES ('13','teodoro_paredes','W33QmQHB','Teodoro Paredes');
+INSERT INTO `usuarios` VALUES ('14','pedro_moreno','8qWugTuz','Pedro Moreno')

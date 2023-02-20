@@ -1,0 +1,17 @@
+    public void Consulta(){
+            try {
+            con = Conector.getConnection();
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("sentencia");
+            if (rs.next()) {
+               //tu condicion
+            } else {
+                //tu condicion si no se cumple
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error " + e);
+//            visualizar tu error
+        }
+    }
